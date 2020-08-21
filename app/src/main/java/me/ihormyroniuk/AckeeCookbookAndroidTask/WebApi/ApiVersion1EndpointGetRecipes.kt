@@ -1,7 +1,6 @@
 package me.ihormyroniuk.AckeeCookbookAndroidTask.WebApi
 
 import org.json.JSONArray
-import org.json.JSONObject
 import java.net.URL
 
 class ApiVersion1EndpointGetRecipes(protocol: String, host: String): ApiVersion1Endpoint(protocol, host) {
@@ -10,13 +9,13 @@ class ApiVersion1EndpointGetRecipes(protocol: String, host: String): ApiVersion1
         var file: String = "api/v1/recipes?limit=$limit&offset=$offset"
         val url = URL(super.protocol, super.host, file)
         val method: String = "GET"
-        val httpRequest = HttpRequestHttpURLConnection(method, url, "", null, null)
+        val httpRequest = PlainHttpRequest(method, url, "", null, null)
         return httpRequest
     }
 
     fun response(httpResponse: HttpResponse): List<RecipeInList> {
-        val body = httpResponse.body
-        val json = String(body, Charsets.UTF_8)
+        val body = httpResponse.messageBody
+        val json = String(if (body != null) body else ByteArray(0), Charsets.UTF_8)
         val jsonArray = JSONArray(json)
         val statusCode = httpResponse.statusCode
         if (statusCode == 200) {
@@ -47,18 +46,3 @@ class ApiVersion1EndpointGetRecipes(protocol: String, host: String): ApiVersion1
     }
 
 }
-
-//let statusCode = response.statusCode
-//if statusCode == Api.StatusCode.ok {
-//    let jsonArray = try JSONSerialization.objectsArray(with: data, options: [])
-//        var recipes: [RecipeInList] = []
-//        for jsonObject in jsonArray {
-//            let recipe = try recipeInList(jsonObject: jsonObject)
-//            recipes.append(recipe)
-//        }
-//        return .success(recipes)
-//    } else {
-//    let jsonObject = try JSONSerialization.object(with: data, options: [])
-//        let error = try self.error(jsonObject: jsonObject)
-//            return .failure(error)
-//        }

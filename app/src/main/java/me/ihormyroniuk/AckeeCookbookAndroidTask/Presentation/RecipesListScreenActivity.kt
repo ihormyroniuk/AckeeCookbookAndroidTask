@@ -36,6 +36,7 @@ class RecipesListScreenActivity: Activity() {
         view.swipeRefreshLayout.setOnRefreshListener {
             view.swipeRefreshLayout.isRefreshing = false
         }
+        view.barView.titleTextView.text = "Recipes"
     }
 
     private inner class RecyclerViewAdapter: RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder>() {

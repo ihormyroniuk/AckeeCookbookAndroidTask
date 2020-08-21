@@ -1,10 +1,6 @@
 package me.ihormyroniuk.AckeeCookbookAndroidTask.WebApi
 
 import android.os.AsyncTask
-import android.util.Log
-import me.ihormyroniuk.AckeeCookbookAndroidTask.Presentation.RecipesListScreenActivity
-import java.net.HttpURLConnection
-import java.net.URL
 
 data class RecipeInList(val id: String, val name: String, val duration: Int, val score: Double) {
 
@@ -16,9 +12,9 @@ class WebApiPerformer {
         val gg = ApiVersion1EndpointGetRecipes("https", "cookbook.ack.ee")
         val request = gg.request(limit, offset)
         doAsync {
-            val connection = request.httpUrlConnection()
+            val connection = httpURLConnectionInit(request)
             try {
-                val response = connection.httpResponse()
+                val response = HttpURLConnectionHttpResponse(connection)
                 val recipes = gg.response(response)
                 completionHandler(recipes)
             } finally {
