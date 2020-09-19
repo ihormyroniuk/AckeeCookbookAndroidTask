@@ -1,4 +1,4 @@
-package me.ihormyroniuk.AckeeCookbookAndroidTask.WebApi
+package me.ihormyroniuk.AckeeCookbookAndroidTask.Http
 
 interface HttpResponse {
     val httpVersion: String

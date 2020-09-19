@@ -1,8 +1,9 @@
-package me.ihormyroniuk.AckeeCookbookAndroidTask.WebApi
+package me.ihormyroniuk.AckeeCookbookAndroidTask.Http
 
 import java.net.HttpURLConnection
 
-class HttpURLConnectionHttpResponse(httpURLConnection: HttpURLConnection): HttpResponse {
+class HttpURLConnectionHttpResponse(httpURLConnection: HttpURLConnection):
+    HttpResponse {
 
     override val httpVersion: String = ""
     override val statusCode: Int = httpURLConnection.responseCode
