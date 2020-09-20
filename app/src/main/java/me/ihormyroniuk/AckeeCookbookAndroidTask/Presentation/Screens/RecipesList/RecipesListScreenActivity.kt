@@ -7,19 +7,24 @@ import android.os.Bundle
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import me.ihormyroniuk.AckeeCookbookAndroidTask.Http.Success
-import me.ihormyroniuk.AckeeCookbookAndroidTask.Presentation.Screens.RecipeDetails.RecipeDetailsScreenActivity
 import me.ihormyroniuk.AckeeCookbookAndroidTask.Business.RecipeInList
 import me.ihormyroniuk.AckeeCookbookAndroidTask.Http.Result
-import me.ihormyroniuk.AckeeCookbookAndroidTask.WebApi.Version1.ApiVersion1Error
-import me.ihormyroniuk.AckeeCookbookAndroidTask.WebApi.WebApiPerformer
+import me.ihormyroniuk.AckeeCookbookAndroidTask.Http.Success
 import java.lang.ref.WeakReference
 import java.util.*
 
 interface RecipesListScreenDelegate {
     fun recipesListScreenAddRecipe(recipesListScreen: RecipesListScreenActivity)
-    fun recipesListScreenGetRecipes(recipesListScreen: RecipesListScreenActivity, offset: Int, limit: Int, completionHandler: (Result<List<RecipeInList>, Error>) -> Unit)
-    fun recipesListScreenShowRecipeDetails(recipesListScreen: RecipesListScreenActivity, recipeInList: RecipeInList)
+    fun recipesListScreenGetRecipes(
+        recipesListScreen: RecipesListScreenActivity,
+        offset: Int,
+        limit: Int,
+        completionHandler: (Result<List<RecipeInList>, Error>) -> Unit
+    )
+    fun recipesListScreenShowRecipeDetails(
+        recipesListScreen: RecipesListScreenActivity,
+        recipeInList: RecipeInList
+    )
 }
 
 class RecipesListScreenActivity: Activity() {
@@ -27,22 +32,32 @@ class RecipesListScreenActivity: Activity() {
     companion object {
 
         val delegates = mutableMapOf<String, WeakReference<RecipesListScreenDelegate>>()
+        val onCreates = mutableMapOf<String, (RecipesListScreenActivity) -> Unit>()
 
         val identiferKey = "identifier"
 
-        fun intent(context: Context, delegate: RecipesListScreenDelegate): Intent {
+        fun intent(context: Context, delegate: RecipesListScreenDelegate, onCreate: (RecipesListScreenActivity) -> Unit): Intent {
             val intent = Intent(context, RecipesListScreenActivity::class.java)
             val identifier = UUID.randomUUID().toString()
             val weakReference = WeakReference(delegate)
             delegates.put(identifier, weakReference)
+            onCreates.put(identifier, onCreate)
             intent.putExtra(identiferKey, identifier)
             return intent
         }
 
     }
 
+    fun knowRecipeWasDeleted(recipe: RecipeInList) {
+        refreshList()
+    }
+
     private lateinit var view: RecipesListScreenView
+    private val linearLayoutManager = LinearLayoutManager(this)
     private var delegate: WeakReference<RecipesListScreenDelegate>? = null
+    private var recipesInListLoadOffset = 0
+    private val recipesInListLoadlimit = 10
+    private var lastDisplayedRecipeInListIndex: Int? = null
     private var recipes = listOf<RecipeInList>()
 
     //region Events
@@ -51,6 +66,7 @@ class RecipesListScreenActivity: Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         delegate = delegates.get(intent.getStringExtra(identiferKey))
+        (onCreates.get(intent.getStringExtra(identiferKey)))?.let { it(this) }
         view = RecipesListScreenView(this)
         setContentView(view)
         setup()
@@ -60,12 +76,15 @@ class RecipesListScreenActivity: Activity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        delegates.remove(intent.getStringExtra(identiferKey))
+        if (isFinishing) {
+            delegates.remove(intent.getStringExtra(identiferKey))
+            onCreates.remove(intent.getStringExtra(identiferKey))
+        }
     }
 
     //endregion
 
-    //region Actions
+    //region Setup
     //
 
     private fun setup() {
@@ -81,8 +100,9 @@ class RecipesListScreenActivity: Activity() {
     }
 
     private fun setupRecyclerView() {
-        view.recyclerView.layoutManager = LinearLayoutManager(this)
+        view.recyclerView.layoutManager = linearLayoutManager
         view.recyclerView.adapter = RecyclerViewAdapter()
+        view.recyclerView.addOnScrollListener(RecyclerViewOnScrollListener())
     }
 
     private fun setupSwipeRefreshLayout() {
@@ -101,16 +121,49 @@ class RecipesListScreenActivity: Activity() {
     }
 
     private fun refreshList() {
+        lastDisplayedRecipeInListIndex = null
+        recipesInListLoadOffset = 0
         view.swipeRefreshLayout.isRefreshing = true
-        delegate?.get()?.recipesListScreenGetRecipes(this, 0, 10) { result ->
-            runOnUiThread {
-                if (result is Success) {
-                    view.recyclerView.adapter?.notifyItemRangeRemoved(0, recipes.size)
-                    recipes = result.success
-                    view.recyclerView.adapter?.notifyItemRangeInserted(0, recipes.size)
-                    view.swipeRefreshLayout.isRefreshing = false
-                } else {
+        val offset = recipesInListLoadOffset
+        val limit = 2 * recipesInListLoadlimit
+        delegate?.get()?.recipesListScreenGetRecipes(this, offset, limit) { result ->
+            if (result is Success) {
+                recipesInListLoadOffset = limit
+                view.recyclerView.adapter?.notifyItemRangeRemoved(0, recipes.size)
+                recipes = result.success
+                view.recyclerView.adapter?.notifyItemRangeInserted(0, recipes.size)
+                view.swipeRefreshLayout.isRefreshing = false
+            } else {
 
+            }
+        }
+    }
+
+    private fun loadList() {
+        val offset = recipesInListLoadOffset
+        val limit = recipesInListLoadlimit
+        delegate?.get()?.recipesListScreenGetRecipes(this, offset, limit) { result ->
+            if (result is Success) {
+                recipesInListLoadOffset += limit
+                recipes += result.success
+                view.recyclerView.adapter?.notifyItemRangeInserted(offset, recipes.size)
+            } else {
+
+            }
+        }
+    }
+
+    private fun willDisplayRecipeInListAtIndex(index: Int) {
+        if (recipesInListLoadOffset % recipesInListLoadlimit == 0) {
+            if (recipesInListLoadOffset - recipesInListLoadlimit / 2 == index) {
+                if (lastDisplayedRecipeInListIndex != null) {
+                    if (index > lastDisplayedRecipeInListIndex!!) {
+                        lastDisplayedRecipeInListIndex = index
+                        loadList()
+                    }
+                } else {
+                    lastDisplayedRecipeInListIndex = index
+                    loadList()
                 }
             }
         }
@@ -118,12 +171,14 @@ class RecipesListScreenActivity: Activity() {
 
     //endregion
 
-    //region RecyclerViewAdapter
+    //region RecyclerView
     //
 
     private inner class RecyclerViewAdapter: RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder>() {
 
-        private inner class MyViewHolder(val recipesListScreenRecipeView: RecipesListScreenRecipeView) : RecyclerView.ViewHolder(recipesListScreenRecipeView)
+        private inner class MyViewHolder(val recipesListScreenRecipeView: RecipesListScreenRecipeView) : RecyclerView.ViewHolder(
+            recipesListScreenRecipeView
+        )
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
             return MyViewHolder(RecipesListScreenRecipeView(parent.context))
@@ -135,12 +190,25 @@ class RecipesListScreenActivity: Activity() {
             holder.recipesListScreenRecipeView.scoreStarsView.setScore(recipe.score)
             holder.recipesListScreenRecipeView.durationTextView.text = "${recipe.duration} min."
             holder.recipesListScreenRecipeView.setOnClickListener {
-                delegate?.get()?.recipesListScreenShowRecipeDetails(this@RecipesListScreenActivity, recipe)
+                delegate?.get()?.recipesListScreenShowRecipeDetails(
+                    this@RecipesListScreenActivity,
+                    recipe
+                )
             }
         }
 
         override fun getItemCount(): Int {
             return recipes.size
+        }
+
+    }
+
+    private inner class RecyclerViewOnScrollListener: RecyclerView.OnScrollListener() {
+
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            super.onScrolled(recyclerView, dx, dy)
+            val lastVisibleItemPosition = linearLayoutManager.findLastVisibleItemPosition()
+            willDisplayRecipeInListAtIndex(lastVisibleItemPosition)
         }
 
     }

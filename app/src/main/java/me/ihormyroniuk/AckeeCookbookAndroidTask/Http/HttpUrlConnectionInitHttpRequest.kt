@@ -2,7 +2,7 @@ package me.ihormyroniuk.AckeeCookbookAndroidTask.Http
 
 import java.net.HttpURLConnection
 
-fun httpURLConnectionInit(httpRequest: HttpRequest): HttpURLConnection {
+fun HttpURLConnection(httpRequest: HttpRequest): HttpURLConnection {
     val httpUrlConnection = httpRequest.requestUri.openConnection() as HttpURLConnection
     httpUrlConnection.requestMethod = httpRequest.method
     httpRequest.headerFields?.let { headers ->

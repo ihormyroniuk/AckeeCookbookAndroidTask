@@ -1,8 +1,8 @@
 package me.ihormyroniuk.AckeeCookbookAndroidTask.Presentation
 
-import android.content.Intent
-import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.os.Looper
+import me.ihormyroniuk.AckeeCookbookAndroidTask.Application.Application
+import me.ihormyroniuk.AckeeCookbookAndroidTask.Application.MainLauncherActivity
 import me.ihormyroniuk.AckeeCookbookAndroidTask.Business.*
 import me.ihormyroniuk.AckeeCookbookAndroidTask.Http.Failure
 import me.ihormyroniuk.AckeeCookbookAndroidTask.Http.Result
@@ -13,34 +13,33 @@ import me.ihormyroniuk.AckeeCookbookAndroidTask.Presentation.Screens.RecipeDetai
 import me.ihormyroniuk.AckeeCookbookAndroidTask.Presentation.Screens.RecipeDetails.RecipeDetailsScreenDelegate
 import me.ihormyroniuk.AckeeCookbookAndroidTask.Presentation.Screens.RecipesList.RecipesListScreenActivity
 import me.ihormyroniuk.AckeeCookbookAndroidTask.Presentation.Screens.RecipesList.RecipesListScreenDelegate
-import me.ihormyroniuk.AckeeCookbookAndroidTask.WebApi.Version1.ApiVersion1Error
-import me.ihormyroniuk.AckeeCookbookAndroidTask.WebApi.WebApiPerformer
 import java.lang.ref.WeakReference
 
 interface PresentationDelegate {
-    fun presentationGetRecipes(presentation: PresentationActivity, offset: Int, limit: Int, completionHandler: (Result<List<RecipeInList>, Error>) -> Unit)
-    fun presentationGetRecipe(presentation: PresentationActivity, recipeId: String, completionHandler: (Result<RecipeDetails, Error>) -> Unit)
-    fun presentationScoreRecipe(presentation: PresentationActivity, recipeId: String, score: Float, completionHandler: (Result<AddedNewRating, Error>) -> Unit)
-    fun presentationDeleteRecipe(presentation: PresentationActivity, recipeId: String, completionHandler: (Error?) -> Unit)
-    fun presentationUpdateRecipe(presentation: PresentationActivity, updatingRecipe: UpdatingRecipe, completionHandler: (Result<RecipeDetails, Error>) -> Unit)
-    fun presentationAddRecipe(presentation: PresentationActivity, creatingRecipe: CreatingRecipe, completionHandler: (Result<RecipeDetails, Error>) -> Unit)
+    fun presentationGetRecipes(presentation: Presentation, offset: Int, limit: Int, completionHandler: (Result<List<RecipeInList>, Error>) -> Unit)
+    fun presentationGetRecipe(presentation: Presentation, recipeId: String, completionHandler: (Result<RecipeDetails, Error>) -> Unit)
+    fun presentationScoreRecipe(presentation: Presentation, recipeId: String, score: Float, completionHandler: (Result<AddedNewRating, Error>) -> Unit)
+    fun presentationDeleteRecipe(presentation: Presentation, recipeId: String, completionHandler: (Error?) -> Unit)
+    fun presentationUpdateRecipe(presentation: Presentation, updatingRecipe: UpdatingRecipe, completionHandler: (Result<RecipeDetails, Error>) -> Unit)
+    fun presentationAddRecipe(presentation: Presentation, creatingRecipe: CreatingRecipe, completionHandler: (Result<RecipeDetails, Error>) -> Unit)
 }
 
-class PresentationActivity: AppCompatActivity(), RecipesListScreenDelegate, RecipeDetailsScreenDelegate, AddRecipeScreenDelegate {
+class Presentation: RecipesListScreenDelegate, RecipeDetailsScreenDelegate, AddRecipeScreenDelegate {
+
+    fun showRecipesList(mainLauncherActivity: MainLauncherActivity) {
+        val intent = RecipesListScreenActivity.intent(mainLauncherActivity, this) { activity ->
+            recipesListScreenActivity = WeakReference(activity)
+        }
+        mainLauncherActivity.startActivity(intent)
+        mainLauncherActivity.finish()
+    }
 
     var delegate: WeakReference<PresentationDelegate>? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val weakApplication = WeakReference(application as PresentationDelegate)
-        delegate = weakApplication
-        val intent = RecipesListScreenActivity.intent(this, this)
-        startActivity(intent)
-        //finish()
-    }
-
     //region RecipesListScreen
     //
+
+    var recipesListScreenActivity: WeakReference<RecipesListScreenActivity>? = null
 
     override fun recipesListScreenAddRecipe(recipesListScreen: RecipesListScreenActivity) {
         val intent = AddRecipeScreenActivity.intent(recipesListScreen, this)
@@ -49,13 +48,15 @@ class PresentationActivity: AppCompatActivity(), RecipesListScreenDelegate, Reci
 
     override fun recipesListScreenGetRecipes(recipesListScreen: RecipesListScreenActivity, offset: Int, limit: Int, completionHandler: (Result<List<RecipeInList>, Error>) -> Unit) {
         delegate?.get()?.presentationGetRecipes(this, offset, limit) { result ->
-            if (result is Success) {
-                val recipe = Success(result.success)
-                completionHandler(recipe)
-            }
-            if (result is Failure) {
-                val error = result
-                completionHandler(error)
+            recipesListScreen.runOnUiThread {
+                if (result is Success) {
+                    val recipe = Success(result.success)
+                    completionHandler(recipe)
+                }
+                if (result is Failure) {
+                    val error = result
+                    completionHandler(error)
+                }
             }
         }
     }
@@ -83,6 +84,9 @@ class PresentationActivity: AppCompatActivity(), RecipesListScreenDelegate, Reci
             if (error != null) {
 
             } else {
+                recipesListScreenActivity?.get()?.runOnUiThread {
+                    recipesListScreenActivity?.get()?.knowRecipeWasDeleted(recipeDetailsScreen.recipeInList)
+                }
                 recipeDetailsScreen.finish()
             }
         }

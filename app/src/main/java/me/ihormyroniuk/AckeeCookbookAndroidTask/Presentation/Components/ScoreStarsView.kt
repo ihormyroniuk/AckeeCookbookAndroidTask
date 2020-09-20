@@ -4,7 +4,7 @@ import android.content.Context
 import android.widget.ImageView
 import android.widget.LinearLayout
 import me.ihormyroniuk.AckeeCookbookAndroidTask.Http.dp
-import me.ihormyroniuk.AckeeCookbookAndroidTask.Presentation.Images
+import me.ihormyroniuk.AckeeCookbookAndroidTask.Presentation.Images.Images
 import kotlin.math.roundToInt
 
 class ScoreStarsView(context: Context): LinearLayout(context) {

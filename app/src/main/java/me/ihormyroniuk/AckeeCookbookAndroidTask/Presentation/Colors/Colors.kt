@@ -1,4 +1,4 @@
-package me.ihormyroniuk.AckeeCookbookAndroidTask.Presentation
+package me.ihormyroniuk.AckeeCookbookAndroidTask.Presentation.Colors
 
 import android.graphics.Color
 

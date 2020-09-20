@@ -4,7 +4,7 @@ import android.os.AsyncTask
 import me.ihormyroniuk.AckeeCookbookAndroidTask.Business.AddedNewRating
 import me.ihormyroniuk.AckeeCookbookAndroidTask.Http.HttpURLConnectionHttpResponse
 import me.ihormyroniuk.AckeeCookbookAndroidTask.Http.Result
-import me.ihormyroniuk.AckeeCookbookAndroidTask.Http.httpURLConnectionInit
+import me.ihormyroniuk.AckeeCookbookAndroidTask.Http.HttpURLConnection
 import me.ihormyroniuk.AckeeCookbookAndroidTask.Business.RecipeDetails
 import me.ihormyroniuk.AckeeCookbookAndroidTask.Business.RecipeInList
 import me.ihormyroniuk.AckeeCookbookAndroidTask.WebApi.Version1.*
@@ -17,7 +17,7 @@ class WebApiPerformer {
         val endpoint = apiVersion1.getRecipes()
         val request = endpoint.request(limit, offset)
         doAsync {
-            val connection = httpURLConnectionInit(request)
+            val connection = HttpURLConnection(request)
             try {
                 val response = HttpURLConnectionHttpResponse(connection)
                 val recipes = endpoint.response(response)
@@ -32,7 +32,7 @@ class WebApiPerformer {
         val endpoint = apiVersion1.getRecipe()
         val request = endpoint.request(recipeId)
         doAsync {
-            val connection = httpURLConnectionInit(request)
+            val connection = HttpURLConnection(request)
             try {
                 val response = HttpURLConnectionHttpResponse(connection)
                 val recipes = endpoint.response(response)
@@ -47,7 +47,7 @@ class WebApiPerformer {
         val endpoint = apiVersion1.addNewRatingEndpoint()
         val request = endpoint.request(recipeId, score)
         doAsync {
-            val connection = httpURLConnectionInit(request)
+            val connection = HttpURLConnection(request)
             try {
                 val response = HttpURLConnectionHttpResponse(connection)
                 val recipes = endpoint.response(response)
@@ -62,7 +62,7 @@ class WebApiPerformer {
         val endpoint = apiVersion1.deleteRecipe()
         val request = endpoint.request(recipeId)
         doAsync {
-            val connection = httpURLConnectionInit(request)
+            val connection = HttpURLConnection(request)
             try {
                 val response = HttpURLConnectionHttpResponse(connection)
                 val error = endpoint.response(response)
@@ -77,7 +77,7 @@ class WebApiPerformer {
         val endpoint = apiVersion1.createNewRecipe()
         val request = endpoint.request(name, description, ingredients, duration, info)
         doAsync {
-            val connection = httpURLConnectionInit(request)
+            val connection = HttpURLConnection(request)
             try {
                 val response = HttpURLConnectionHttpResponse(connection)
                 val recipe = endpoint.response(response)
@@ -92,7 +92,7 @@ class WebApiPerformer {
         val endpoint = apiVersion1.updateRecipe()
         val request = endpoint.request(id, name, description, ingredients, duration, info)
         doAsync {
-            val connection = httpURLConnectionInit(request)
+            val connection = HttpURLConnection(request)
             try {
                 val response = HttpURLConnectionHttpResponse(connection)
                 val recipe = endpoint.response(response)

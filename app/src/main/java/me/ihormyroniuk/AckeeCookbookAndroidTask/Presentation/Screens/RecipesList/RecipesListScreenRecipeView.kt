@@ -10,13 +10,10 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet
-import androidx.constraintlayout.widget.ConstraintSet.*
 import androidx.core.widget.TextViewCompat
 import me.ihormyroniuk.AckeeCookbookAndroidTask.Http.dp
 import me.ihormyroniuk.AckeeCookbookAndroidTask.Presentation.Components.ScoreStarsView
-import me.ihormyroniuk.AckeeCookbookAndroidTask.Presentation.Images
+import me.ihormyroniuk.AckeeCookbookAndroidTask.Presentation.Images.Images
 
 class RecipesListScreenRecipeView(context: Context): LinearLayout(context) {
 

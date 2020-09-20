@@ -3,22 +3,17 @@ package me.ihormyroniuk.AckeeCookbookAndroidTask.Presentation.Screens.RecipeDeta
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
-import android.view.Window
 import android.widget.Button
-import android.widget.ImageButton
 import me.ihormyroniuk.AckeeCookbookAndroidTask.Business.AddedNewRating
 import me.ihormyroniuk.AckeeCookbookAndroidTask.Business.RecipeDetails
 import me.ihormyroniuk.AckeeCookbookAndroidTask.Business.RecipeInList
 import me.ihormyroniuk.AckeeCookbookAndroidTask.Http.Failure
 import me.ihormyroniuk.AckeeCookbookAndroidTask.Http.Result
 import me.ihormyroniuk.AckeeCookbookAndroidTask.Http.Success
-import me.ihormyroniuk.AckeeCookbookAndroidTask.Presentation.PresentationActivity
+import me.ihormyroniuk.AckeeCookbookAndroidTask.Presentation.Screens.AddRecipe.AddRecipeScreenActivity
 import me.ihormyroniuk.AckeeCookbookAndroidTask.Presentation.Screens.RecipesList.RecipesListScreenActivity
-import me.ihormyroniuk.AckeeCookbookAndroidTask.WebApi.WebApiPerformer
 import java.lang.ref.WeakReference
 import java.util.*
 
@@ -55,6 +50,9 @@ class RecipeDetailsScreenActivity: Activity() {
     lateinit var recipeInList: RecipeInList
     var recipeDetails: RecipeDetails? = null
 
+    //region Events
+    //
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         view = RecipeDetailsScreenView(this)
@@ -67,23 +65,18 @@ class RecipeDetailsScreenActivity: Activity() {
         setContent()
     }
 
-    //region Setup
-    //
-
-    private fun refresh() {
-        val recipeId = recipeInList.id
-        delegate?.get()?.recipeDetailsScreenGetRecipe(this, recipeId) { result ->
-            runOnUiThread {
-                if (result is Success) {
-                    recipeDetails = result.success
-                    setContent()
-                }
-                if (result is Failure) {
-
-                }
-            }
+    override fun onDestroy() {
+        super.onDestroy()
+        if (isFinishing) {
+            delegates.remove(intent.getStringExtra(identiferKey))
+            recipesInLists.remove(intent.getStringExtra(identiferKey))
         }
     }
+
+    //endregion
+
+    //region Setup
+    //
 
     private fun setup() {
         setupBackButton()
@@ -133,6 +126,21 @@ class RecipeDetailsScreenActivity: Activity() {
         val recipeId = recipeInList.id
         delegate?.get()?.recipeDetailsScreenDelete(this, recipeId) {
 
+        }
+    }
+
+    private fun refresh() {
+        val recipeId = recipeInList.id
+        delegate?.get()?.recipeDetailsScreenGetRecipe(this, recipeId) { result ->
+            runOnUiThread {
+                if (result is Success) {
+                    recipeDetails = result.success
+                    setContent()
+                }
+                if (result is Failure) {
+
+                }
+            }
         }
     }
 

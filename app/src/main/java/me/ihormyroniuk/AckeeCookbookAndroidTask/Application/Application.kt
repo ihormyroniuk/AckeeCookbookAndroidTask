@@ -5,16 +5,28 @@ import me.ihormyroniuk.AckeeCookbookAndroidTask.Business.*
 import me.ihormyroniuk.AckeeCookbookAndroidTask.Http.Failure
 import me.ihormyroniuk.AckeeCookbookAndroidTask.Http.Result
 import me.ihormyroniuk.AckeeCookbookAndroidTask.Http.Success
-import me.ihormyroniuk.AckeeCookbookAndroidTask.Presentation.PresentationActivity
+import me.ihormyroniuk.AckeeCookbookAndroidTask.Presentation.Presentation
 import me.ihormyroniuk.AckeeCookbookAndroidTask.Presentation.PresentationDelegate
 import me.ihormyroniuk.AckeeCookbookAndroidTask.WebApi.WebApiPerformer
+import java.lang.ref.WeakReference
 
 class Application: Application(), PresentationDelegate {
 
-    val webApiPerformer = WebApiPerformer()
+    fun onCreateMainLauncherActivity(mainLauncherActivity: MainLauncherActivity) {
+        presentation.showRecipesList(mainLauncherActivity)
+    }
 
-    override fun presentationGetRecipes(presentation: PresentationActivity, offset: Int, limit: Int, completionHandler: (Result<List<RecipeInList>, Error>) -> Unit) {
-        webApiPerformer.getRecipes(0, 10) { result ->
+    //region Presentation
+    //
+
+    private val presentation: Presentation by lazy {
+        val presentation = Presentation()
+        presentation.delegate = WeakReference(this as PresentationDelegate)
+        presentation
+    }
+
+    override fun presentationGetRecipes(presentation: Presentation, offset: Int, limit: Int, completionHandler: (Result<List<RecipeInList>, Error>) -> Unit) {
+        webApiPerformer.getRecipes(offset, limit) { result ->
             if (result is Success) {
                 val recipes = Success(result.success)
                 completionHandler(recipes)
@@ -26,7 +38,7 @@ class Application: Application(), PresentationDelegate {
         }
     }
 
-    override fun presentationGetRecipe(presentation: PresentationActivity, recipeId: String, completionHandler: (Result<RecipeDetails, Error>) -> Unit) {
+    override fun presentationGetRecipe(presentation: Presentation, recipeId: String, completionHandler: (Result<RecipeDetails, Error>) -> Unit) {
         webApiPerformer.getRecipe(recipeId) { result ->
             if (result is Success) {
                 val recipe = Success(result.success)
@@ -39,7 +51,7 @@ class Application: Application(), PresentationDelegate {
         }
     }
 
-    override fun presentationScoreRecipe(presentation: PresentationActivity, recipeId: String, score: Float, completionHandler: (Result<AddedNewRating, Error>) -> Unit) {
+    override fun presentationScoreRecipe(presentation: Presentation, recipeId: String, score: Float, completionHandler: (Result<AddedNewRating, Error>) -> Unit) {
         webApiPerformer.addNewRating(recipeId, score) { result ->
             if (result is Success) {
                 val addedNewRating = Success(result.success)
@@ -52,13 +64,13 @@ class Application: Application(), PresentationDelegate {
         }
     }
 
-    override fun presentationDeleteRecipe(presentation: PresentationActivity, recipeId: String, completionHandler: (Error?) -> Unit) {
+    override fun presentationDeleteRecipe(presentation: Presentation, recipeId: String, completionHandler: (Error?) -> Unit) {
         webApiPerformer.deleteRecipe(recipeId) { error ->
             completionHandler(error)
         }
     }
 
-    override fun presentationUpdateRecipe(presentation: PresentationActivity, updatingRecipe: UpdatingRecipe, completionHandler: (Result<RecipeDetails, Error>) -> Unit) {
+    override fun presentationUpdateRecipe(presentation: Presentation, updatingRecipe: UpdatingRecipe, completionHandler: (Result<RecipeDetails, Error>) -> Unit) {
         val id = updatingRecipe.id
         val name = updatingRecipe.name
         val description = updatingRecipe.description
@@ -77,7 +89,7 @@ class Application: Application(), PresentationDelegate {
         }
     }
 
-    override fun presentationAddRecipe(presentation: PresentationActivity, creatingRecipe: CreatingRecipe, completionHandler: (Result<RecipeDetails, Error>) -> Unit) {
+    override fun presentationAddRecipe(presentation: Presentation, creatingRecipe: CreatingRecipe, completionHandler: (Result<RecipeDetails, Error>) -> Unit) {
         val name = creatingRecipe.name
         val description = creatingRecipe.description
         val ingredients = creatingRecipe.ingredients
@@ -94,5 +106,17 @@ class Application: Application(), PresentationDelegate {
             }
         }
     }
+
+    //endregion
+
+    //region Presentation
+    //
+
+    private val webApiPerformer: WebApiPerformer by lazy {
+        val webApiPerformer = WebApiPerformer()
+        webApiPerformer
+    }
+
+    //endregion
 
 }

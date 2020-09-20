@@ -41,6 +41,9 @@ class AddRecipeScreenActivity: Activity() {
     lateinit var view: AddRecipeScreenView
     var delegate: WeakReference<AddRecipeScreenDelegate>? = null
 
+    //region Events
+    //
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         view = AddRecipeScreenView(this)
@@ -49,6 +52,15 @@ class AddRecipeScreenActivity: Activity() {
         setup()
         setContent()
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (isFinishing) {
+            delegates.remove(intent.getStringExtra(identiferKey))
+        }
+    }
+
+    //endregion
 
     //region Setup
     //
