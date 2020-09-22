@@ -3,6 +3,7 @@ package me.ihormyroniuk.AckeeCookbookAndroidTask.Presentation.Screens.RecipeDeta
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -59,7 +60,7 @@ class RecipeDetailsScreenActivity: Activity() {
         setContentView(view)
         delegate = delegates.get(intent.getStringExtra(RecipeDetailsScreenActivity.identiferKey))
         recipeInList = recipesInLists.get(intent.getStringExtra(RecipeDetailsScreenActivity.identiferKey))!!
-        //window.statusBarColor = Color.alpha(0)
+        window.statusBarColor = Color.TRANSPARENT
         setup()
         refresh()
         setContent()
@@ -81,6 +82,8 @@ class RecipeDetailsScreenActivity: Activity() {
     private fun setup() {
         setupBackButton()
         setupDeleteButton()
+        setupUpdateButton()
+        setupSwipeRefreshLayout()
         setupStarButtons()
     }
 
@@ -99,6 +102,12 @@ class RecipeDetailsScreenActivity: Activity() {
     private fun setupDeleteButton() {
         view.barView.deleteButton.setOnClickListener {
             delete()
+        }
+    }
+
+    private fun setupSwipeRefreshLayout() {
+        view.swipeRefreshLayout.setOnRefreshListener {
+            refresh()
         }
     }
 
@@ -131,9 +140,11 @@ class RecipeDetailsScreenActivity: Activity() {
 
     private fun refresh() {
         val recipeId = recipeInList.id
+        view.swipeRefreshLayout.isRefreshing = true
         delegate?.get()?.recipeDetailsScreenGetRecipe(this, recipeId) { result ->
             runOnUiThread {
                 if (result is Success) {
+                    view.swipeRefreshLayout.isRefreshing = false
                     recipeDetails = result.success
                     setContent()
                 }
@@ -152,8 +163,9 @@ class RecipeDetailsScreenActivity: Activity() {
             val recipeId = recipeInList.id
             delegate?.get()?.recipeDetailsScreenScore(this, recipeId, score) { result ->
                 if (result is Success) {
+                    recipeInList.score = result.success.score
                     view.scoreView.progressBar.visibility = View.INVISIBLE
-                    view.scoreView.scoreStarsView.setSelectedScore(result.success.score)
+                    setContent()
                 }
                 if (result is Failure) {
 
@@ -172,14 +184,15 @@ class RecipeDetailsScreenActivity: Activity() {
         view.barView.updateButton.text = "Update"
         view.nameTextView.text = recipeInList.name
         view.scoreView.scoreStarsView.setSelectedScore(recipeInList.score)
+        view.scoreStarsView.setScore(recipeInList.score)
         view.durationTextView.text = "${recipeInList.duration} min."
         recipeDetails?.let { recipeDetails ->
-            view.scoreStarsView.setScore(recipeDetails.score)
             view.infoTextView.text = recipeDetails.info
             view.ingredientsTextView.text = "Ingredients"
             view.descriptionTitleLabel.text = "Description"
             view.descriptionLabel.text = recipeDetails.description
             view.scoreView.textView.text = "Score this recipe"
+            view.setIngredients(recipeDetails.ingredients)
         }
     }
 

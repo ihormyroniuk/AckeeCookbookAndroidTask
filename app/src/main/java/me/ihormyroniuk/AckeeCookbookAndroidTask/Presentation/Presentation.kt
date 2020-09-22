@@ -107,13 +107,15 @@ class Presentation: RecipesListScreenDelegate, RecipeDetailsScreenDelegate, AddR
 
     override fun recipeDetailsScreenScore(recipeDetailsScreen: RecipeDetailsScreenActivity, recipeId: String, score: Float, completionHandler: (Result<AddedNewRating, Error>) -> Unit) {
         delegate?.get()?.presentationScoreRecipe(this, recipeId, score) { result ->
-            if (result is Success) {
-                val recipe = Success(result.success)
-                completionHandler(recipe)
-            }
-            if (result is Failure) {
-                val error = result
-                completionHandler(error)
+            recipeDetailsScreen.runOnUiThread {
+                if (result is Success) {
+                    val recipe = Success(result.success)
+                    completionHandler(recipe)
+                }
+                if (result is Failure) {
+                    val error = result
+                    completionHandler(error)
+                }
             }
         }
     }

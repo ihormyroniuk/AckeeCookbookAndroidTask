@@ -15,16 +15,8 @@ import java.util.*
 
 interface RecipesListScreenDelegate {
     fun recipesListScreenAddRecipe(recipesListScreen: RecipesListScreenActivity)
-    fun recipesListScreenGetRecipes(
-        recipesListScreen: RecipesListScreenActivity,
-        offset: Int,
-        limit: Int,
-        completionHandler: (Result<List<RecipeInList>, Error>) -> Unit
-    )
-    fun recipesListScreenShowRecipeDetails(
-        recipesListScreen: RecipesListScreenActivity,
-        recipeInList: RecipeInList
-    )
+    fun recipesListScreenGetRecipes(recipesListScreen: RecipesListScreenActivity, offset: Int, limit: Int, completionHandler: (Result<List<RecipeInList>, Error>) -> Unit)
+    fun recipesListScreenShowRecipeDetails(recipesListScreen: RecipesListScreenActivity, recipeInList: RecipeInList)
 }
 
 class RecipesListScreenActivity: Activity() {
@@ -34,7 +26,7 @@ class RecipesListScreenActivity: Activity() {
         val delegates = mutableMapOf<String, WeakReference<RecipesListScreenDelegate>>()
         val onCreates = mutableMapOf<String, (RecipesListScreenActivity) -> Unit>()
 
-        val identiferKey = "identifier"
+        const val identiferKey = "identifier"
 
         fun intent(context: Context, delegate: RecipesListScreenDelegate, onCreate: (RecipesListScreenActivity) -> Unit): Intent {
             val intent = Intent(context, RecipesListScreenActivity::class.java)

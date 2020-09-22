@@ -3,6 +3,7 @@ package me.ihormyroniuk.AckeeCookbookAndroidTask.WebApi.Version1
 import me.ihormyroniuk.AckeeCookbookAndroidTask.Business.RecipeDetails
 import me.ihormyroniuk.AckeeCookbookAndroidTask.Http.*
 import me.ihormyroniuk.AckeeCookbookAndroidTask.WebApi.Api
+import org.json.JSONArray
 import org.json.JSONObject
 import java.net.URL
 
@@ -16,7 +17,8 @@ class ApiVersion1EndpointUpdateRecipe(protocol: String, host: String): ApiVersio
         val jsonObject = JSONObject()
         jsonObject.put("name", name)
         jsonObject.put("description", description)
-        jsonObject.put("ingredients", ingredients)
+        val ingredientsJsonArray = JSONArray(ingredients)
+        jsonObject.put("ingredients", ingredientsJsonArray)
         jsonObject.put("duration", duration)
         jsonObject.put("info", info)
         val body = jsonObject.toString().toByteArray(Charsets.UTF_8)

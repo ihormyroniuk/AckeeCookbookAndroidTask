@@ -1,6 +1,7 @@
 package me.ihormyroniuk.AckeeCookbookAndroidTask.Presentation.Screens.RecipeDetails
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
@@ -21,8 +22,8 @@ import kotlin.math.roundToInt
 class RecipeDetailsScreenBarView(context: Context): ConstraintLayout(context) {
 
     val backButton: ImageButton = ImageButton(context)
-    var deleteButton: Button = Button(context)
-    var updateButton: Button = Button(context)
+    var deleteButton = TextView(context)
+    var updateButton = TextView(context)
 
     init {
         elevation = dp(8).toFloat()
@@ -35,6 +36,7 @@ class RecipeDetailsScreenBarView(context: Context): ConstraintLayout(context) {
     }
 
     fun setup() {
+        setBackgroundColor(Color.TRANSPARENT)
         setupBackButton()
         setupDeleteButton()
         setupUpdateButton()
@@ -49,11 +51,46 @@ class RecipeDetailsScreenBarView(context: Context): ConstraintLayout(context) {
     fun setupDeleteButton() {
         deleteButton.id = View.generateViewId()
         //deleteButton.setBackgroundColor(Color.TRANSPARENT)
+
+        val states = arrayOf(
+            intArrayOf(android.R.attr.state_enabled),
+            intArrayOf(-android.R.attr.state_enabled),
+            intArrayOf(-android.R.attr.state_checked),
+            intArrayOf(android.R.attr.state_pressed)
+        )
+
+        val colors = intArrayOf(
+            Color.BLACK,
+            Color.RED,
+            Color.GREEN,
+            Color.BLUE
+        )
+
+        val myList = ColorStateList(states, colors)
+
+        deleteButton.setTextColor(myList)
     }
 
     fun setupUpdateButton() {
         updateButton.id = View.generateViewId()
-        //updateButton.setBackgroundColor(Color.TRANSPARENT)
+
+        val states = arrayOf(
+            intArrayOf(android.R.attr.state_enabled),
+            intArrayOf(android.R.attr.state_checkable),
+            intArrayOf(-android.R.attr.state_checked),
+            intArrayOf(android.R.attr.state_pressed)
+        )
+
+        val colors = intArrayOf(
+            Color.BLACK,
+            Color.RED,
+            Color.GREEN,
+            Color.BLUE
+        )
+
+        val myList = ColorStateList(states, colors)
+
+        updateButton.setTextColor(myList)
     }
 
     fun layout() {
@@ -65,9 +102,23 @@ class RecipeDetailsScreenBarView(context: Context): ConstraintLayout(context) {
     fun layoutBackButton() {
         addView(backButton)
         val constraintSet = ConstraintSet()
-        constraintSet.connect(backButton.id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
-        constraintSet.connect(backButton.id, ConstraintSet.LEFT, ConstraintSet.PARENT_ID, ConstraintSet.LEFT, dp(24))
-        constraintSet.connect(backButton.id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
+        constraintSet.connect(
+            backButton.id,
+            ConstraintSet.TOP,
+            ConstraintSet.PARENT_ID,
+            ConstraintSet.TOP
+        )
+        constraintSet.connect(
+            backButton.id, ConstraintSet.LEFT, ConstraintSet.PARENT_ID, ConstraintSet.LEFT, dp(
+                24
+            )
+        )
+        constraintSet.connect(
+            backButton.id,
+            ConstraintSet.BOTTOM,
+            ConstraintSet.PARENT_ID,
+            ConstraintSet.BOTTOM
+        )
         constraintSet.constrainWidth(backButton.id, WRAP_CONTENT)
         constraintSet.constrainHeight(backButton.id, WRAP_CONTENT)
         constraintSet.applyTo(this)
@@ -76,9 +127,23 @@ class RecipeDetailsScreenBarView(context: Context): ConstraintLayout(context) {
     fun layoutDeleteButton() {
         addView(deleteButton)
         val constraintSet = ConstraintSet()
-        constraintSet.connect(deleteButton.id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
-        constraintSet.connect(deleteButton.id, ConstraintSet.RIGHT, ConstraintSet.PARENT_ID, ConstraintSet.RIGHT, dp(24))
-        constraintSet.connect(deleteButton.id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
+        constraintSet.connect(
+            deleteButton.id,
+            ConstraintSet.TOP,
+            ConstraintSet.PARENT_ID,
+            ConstraintSet.TOP
+        )
+        constraintSet.connect(
+            deleteButton.id, ConstraintSet.RIGHT, ConstraintSet.PARENT_ID, ConstraintSet.RIGHT, dp(
+                24
+            )
+        )
+        constraintSet.connect(
+            deleteButton.id,
+            ConstraintSet.BOTTOM,
+            ConstraintSet.PARENT_ID,
+            ConstraintSet.BOTTOM
+        )
         constraintSet.constrainWidth(deleteButton.id, WRAP_CONTENT)
         constraintSet.constrainHeight(deleteButton.id, WRAP_CONTENT)
         constraintSet.applyTo(this)
@@ -88,9 +153,23 @@ class RecipeDetailsScreenBarView(context: Context): ConstraintLayout(context) {
     fun layoutUpdateButton() {
         addView(updateButton)
         val constraintSet = ConstraintSet()
-        constraintSet.connect(updateButton.id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
-        constraintSet.connect(updateButton.id, ConstraintSet.RIGHT, deleteButton.id, ConstraintSet.LEFT, dp(24))
-        constraintSet.connect(updateButton.id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
+        constraintSet.connect(
+            updateButton.id,
+            ConstraintSet.TOP,
+            ConstraintSet.PARENT_ID,
+            ConstraintSet.TOP
+        )
+        constraintSet.connect(
+            updateButton.id, ConstraintSet.RIGHT, deleteButton.id, ConstraintSet.LEFT, dp(
+                24
+            )
+        )
+        constraintSet.connect(
+            updateButton.id,
+            ConstraintSet.BOTTOM,
+            ConstraintSet.PARENT_ID,
+            ConstraintSet.BOTTOM
+        )
         constraintSet.constrainWidth(updateButton.id, WRAP_CONTENT)
         constraintSet.constrainHeight(updateButton.id, WRAP_CONTENT)
         constraintSet.applyTo(this)
@@ -122,10 +201,6 @@ class RecipeDetailsScreenView(context: Context): ConstraintLayout(context) {
     init {
         setup()
         layout()
-
-//        fitsSystemWindows = false
-//        systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
-//        requestApplyInsetsWhenAttached()
     }
 
     //region Setup
@@ -195,6 +270,8 @@ class RecipeDetailsScreenView(context: Context): ConstraintLayout(context) {
     //region Layout
     //
 
+    private var systemWindowInsetTop: Int? = null
+
     private fun layout() {
         barView.id = View.generateViewId()
         scrollView.id = View.generateViewId()
@@ -223,18 +300,70 @@ class RecipeDetailsScreenView(context: Context): ConstraintLayout(context) {
         layoutDurationImageView()
         layoutNameTextView()
         layoutInfoTextView()
+        layoutIngredientsConstraintLayout()
         layoutIngredientsTextView()
         layoutDescriptionTitleLabel()
         layoutDescriptionLabel()
         layoutScoreView()
+
+        setOnApplyWindowInsetsListener { v, insets ->
+            systemWindowInsetTop = insets.systemWindowInsetTop // status bar height
+            layoutBarView(insets.systemWindowInsetTop)
+            insets
+        }
+
+        fitsSystemWindows = false
+        systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
+        requestApplyInsetsWhenAttached()
     }
 
     private fun layoutBarView() {
         addView(barView)
         val constraintSet = ConstraintSet()
-        constraintSet.connect(barView.id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
-        constraintSet.connect(barView.id, ConstraintSet.LEFT, ConstraintSet.PARENT_ID, ConstraintSet.LEFT)
-        constraintSet.connect(barView.id, ConstraintSet.RIGHT, ConstraintSet.PARENT_ID, ConstraintSet.RIGHT)
+        constraintSet.connect(
+            barView.id,
+            ConstraintSet.TOP,
+            ConstraintSet.PARENT_ID,
+            ConstraintSet.TOP
+        )
+        constraintSet.connect(
+            barView.id,
+            ConstraintSet.LEFT,
+            ConstraintSet.PARENT_ID,
+            ConstraintSet.LEFT
+        )
+        constraintSet.connect(
+            barView.id,
+            ConstraintSet.RIGHT,
+            ConstraintSet.PARENT_ID,
+            ConstraintSet.RIGHT
+        )
+        constraintSet.constrainHeight(barView.id, WRAP_CONTENT)
+        constraintSet.applyTo(this)
+    }
+
+    private fun layoutBarView(systemWindowInsetTop: Int) {
+        val constraintSet = ConstraintSet()
+        constraintSet.clear(barView.id)
+        constraintSet.connect(
+            barView.id,
+            ConstraintSet.TOP,
+            ConstraintSet.PARENT_ID,
+            ConstraintSet.TOP,
+            systemWindowInsetTop
+        )
+        constraintSet.connect(
+            barView.id,
+            ConstraintSet.LEFT,
+            ConstraintSet.PARENT_ID,
+            ConstraintSet.LEFT
+        )
+        constraintSet.connect(
+            barView.id,
+            ConstraintSet.RIGHT,
+            ConstraintSet.PARENT_ID,
+            ConstraintSet.RIGHT
+        )
         constraintSet.constrainHeight(barView.id, WRAP_CONTENT)
         constraintSet.applyTo(this)
     }
@@ -243,10 +372,30 @@ class RecipeDetailsScreenView(context: Context): ConstraintLayout(context) {
         addView(swipeRefreshLayout)
         //swipeRefreshLayout.setProgressViewOffset(false, 300, 600)
         val constraintSet = ConstraintSet()
-        constraintSet.connect(swipeRefreshLayout.id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
-        constraintSet.connect(swipeRefreshLayout.id, ConstraintSet.LEFT, ConstraintSet.PARENT_ID, ConstraintSet.LEFT)
-        constraintSet.connect(swipeRefreshLayout.id, ConstraintSet.RIGHT, ConstraintSet.PARENT_ID, ConstraintSet.RIGHT)
-        constraintSet.connect(swipeRefreshLayout.id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
+        constraintSet.connect(
+            swipeRefreshLayout.id,
+            ConstraintSet.TOP,
+            ConstraintSet.PARENT_ID,
+            ConstraintSet.TOP
+        )
+        constraintSet.connect(
+            swipeRefreshLayout.id,
+            ConstraintSet.LEFT,
+            ConstraintSet.PARENT_ID,
+            ConstraintSet.LEFT
+        )
+        constraintSet.connect(
+            swipeRefreshLayout.id,
+            ConstraintSet.RIGHT,
+            ConstraintSet.PARENT_ID,
+            ConstraintSet.RIGHT
+        )
+        constraintSet.connect(
+            swipeRefreshLayout.id,
+            ConstraintSet.BOTTOM,
+            ConstraintSet.PARENT_ID,
+            ConstraintSet.BOTTOM
+        )
         constraintSet.applyTo(this)
     }
 
@@ -255,15 +404,35 @@ class RecipeDetailsScreenView(context: Context): ConstraintLayout(context) {
     }
 
     private fun layoutScrollViewConstraintLayout() {
-        scrollView.addView(scrollViewConstraintLayout, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT))
+        scrollView.addView(
+            scrollViewConstraintLayout, LayoutParams(
+                LayoutParams.MATCH_PARENT,
+                LayoutParams.WRAP_CONTENT
+            )
+        )
     }
 
     private fun layoutPictureImageView() {
         scrollViewConstraintLayout.addView(pictureImageView)
         val constraintSet = ConstraintSet()
-        constraintSet.connect(pictureImageView.id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
-        constraintSet.connect(pictureImageView.id, ConstraintSet.LEFT, ConstraintSet.PARENT_ID, ConstraintSet.LEFT)
-        constraintSet.connect(pictureImageView.id, ConstraintSet.RIGHT, ConstraintSet.PARENT_ID, ConstraintSet.RIGHT)
+        constraintSet.connect(
+            pictureImageView.id,
+            ConstraintSet.TOP,
+            ConstraintSet.PARENT_ID,
+            ConstraintSet.TOP
+        )
+        constraintSet.connect(
+            pictureImageView.id,
+            ConstraintSet.LEFT,
+            ConstraintSet.PARENT_ID,
+            ConstraintSet.LEFT
+        )
+        constraintSet.connect(
+            pictureImageView.id,
+            ConstraintSet.RIGHT,
+            ConstraintSet.PARENT_ID,
+            ConstraintSet.RIGHT
+        )
         constraintSet.constrainHeight(pictureImageView.id, WRAP_CONTENT)
         constraintSet.applyTo(scrollViewConstraintLayout)
     }
@@ -271,9 +440,24 @@ class RecipeDetailsScreenView(context: Context): ConstraintLayout(context) {
     private fun layoutScoreDurationConstraintLayout() {
         scrollViewConstraintLayout.addView(scoreDurationConstraintLayout)
         val constraintSet = ConstraintSet()
-        constraintSet.connect(scoreDurationConstraintLayout.id, ConstraintSet.BOTTOM, pictureImageView.id, ConstraintSet.BOTTOM)
-        constraintSet.connect(scoreDurationConstraintLayout.id, ConstraintSet.LEFT, ConstraintSet.PARENT_ID, ConstraintSet.LEFT)
-        constraintSet.connect(scoreDurationConstraintLayout.id, ConstraintSet.RIGHT, ConstraintSet.PARENT_ID, ConstraintSet.RIGHT)
+        constraintSet.connect(
+            scoreDurationConstraintLayout.id,
+            ConstraintSet.BOTTOM,
+            pictureImageView.id,
+            ConstraintSet.BOTTOM
+        )
+        constraintSet.connect(
+            scoreDurationConstraintLayout.id,
+            ConstraintSet.LEFT,
+            ConstraintSet.PARENT_ID,
+            ConstraintSet.LEFT
+        )
+        constraintSet.connect(
+            scoreDurationConstraintLayout.id,
+            ConstraintSet.RIGHT,
+            ConstraintSet.PARENT_ID,
+            ConstraintSet.RIGHT
+        )
         constraintSet.constrainHeight(scoreDurationConstraintLayout.id, dp(48))
         constraintSet.applyTo(scrollViewConstraintLayout)
     }
@@ -281,9 +465,25 @@ class RecipeDetailsScreenView(context: Context): ConstraintLayout(context) {
     private fun layoutNameTextView() {
         scrollViewConstraintLayout.addView(nameTextView)
         val constraintSet = ConstraintSet()
-        constraintSet.connect(nameTextView.id, ConstraintSet.BOTTOM, scoreDurationConstraintLayout.id, ConstraintSet.TOP, dp(32))
-        constraintSet.connect(nameTextView.id, ConstraintSet.LEFT, ConstraintSet.PARENT_ID, ConstraintSet.LEFT, dp(24))
-        constraintSet.connect(nameTextView.id, ConstraintSet.RIGHT, ConstraintSet.PARENT_ID, ConstraintSet.RIGHT, dp(24))
+        constraintSet.connect(
+            nameTextView.id,
+            ConstraintSet.BOTTOM,
+            scoreDurationConstraintLayout.id,
+            ConstraintSet.TOP,
+            dp(
+                32
+            )
+        )
+        constraintSet.connect(
+            nameTextView.id, ConstraintSet.LEFT, ConstraintSet.PARENT_ID, ConstraintSet.LEFT, dp(
+                24
+            )
+        )
+        constraintSet.connect(
+            nameTextView.id, ConstraintSet.RIGHT, ConstraintSet.PARENT_ID, ConstraintSet.RIGHT, dp(
+                24
+            )
+        )
         constraintSet.constrainHeight(nameTextView.id, WRAP_CONTENT)
         constraintSet.applyTo(scrollViewConstraintLayout)
     }
@@ -292,9 +492,23 @@ class RecipeDetailsScreenView(context: Context): ConstraintLayout(context) {
         scoreStarsView.starSizeDp = dp(22)
         scoreDurationConstraintLayout.addView(scoreStarsView)
         val constraintSet = ConstraintSet()
-        constraintSet.connect(scoreStarsView.id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
-        constraintSet.connect(scoreStarsView.id, ConstraintSet.LEFT, ConstraintSet.PARENT_ID, ConstraintSet.LEFT, dp(24))
-        constraintSet.connect(scoreStarsView.id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
+        constraintSet.connect(
+            scoreStarsView.id,
+            ConstraintSet.BOTTOM,
+            ConstraintSet.PARENT_ID,
+            ConstraintSet.BOTTOM
+        )
+        constraintSet.connect(
+            scoreStarsView.id, ConstraintSet.LEFT, ConstraintSet.PARENT_ID, ConstraintSet.LEFT, dp(
+                24
+            )
+        )
+        constraintSet.connect(
+            scoreStarsView.id,
+            ConstraintSet.TOP,
+            ConstraintSet.PARENT_ID,
+            ConstraintSet.TOP
+        )
         constraintSet.constrainHeight(scoreStarsView.id, WRAP_CONTENT)
         constraintSet.applyTo(scoreDurationConstraintLayout)
     }
@@ -302,9 +516,27 @@ class RecipeDetailsScreenView(context: Context): ConstraintLayout(context) {
     private fun layoutDurationTextView() {
         scoreDurationConstraintLayout.addView(durationTextView)
         val constraintSet = ConstraintSet()
-        constraintSet.connect(durationTextView.id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
-        constraintSet.connect(durationTextView.id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
-        constraintSet.connect(durationTextView.id, ConstraintSet.RIGHT, ConstraintSet.PARENT_ID, ConstraintSet.RIGHT, dp(24))
+        constraintSet.connect(
+            durationTextView.id,
+            ConstraintSet.BOTTOM,
+            ConstraintSet.PARENT_ID,
+            ConstraintSet.BOTTOM
+        )
+        constraintSet.connect(
+            durationTextView.id,
+            ConstraintSet.TOP,
+            ConstraintSet.PARENT_ID,
+            ConstraintSet.TOP
+        )
+        constraintSet.connect(
+            durationTextView.id,
+            ConstraintSet.RIGHT,
+            ConstraintSet.PARENT_ID,
+            ConstraintSet.RIGHT,
+            dp(
+                24
+            )
+        )
         constraintSet.constrainHeight(durationTextView.id, WRAP_CONTENT)
         constraintSet.applyTo(scoreDurationConstraintLayout)
     }
@@ -312,9 +544,23 @@ class RecipeDetailsScreenView(context: Context): ConstraintLayout(context) {
     private fun layoutDurationImageView() {
         scoreDurationConstraintLayout.addView(durationImageView)
         val constraintSet = ConstraintSet()
-        constraintSet.connect(durationImageView.id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
-        constraintSet.connect(durationImageView.id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
-        constraintSet.connect(durationImageView.id, ConstraintSet.RIGHT, durationTextView.id, ConstraintSet.LEFT, dp(24))
+        constraintSet.connect(
+            durationImageView.id,
+            ConstraintSet.BOTTOM,
+            ConstraintSet.PARENT_ID,
+            ConstraintSet.BOTTOM
+        )
+        constraintSet.connect(
+            durationImageView.id,
+            ConstraintSet.TOP,
+            ConstraintSet.PARENT_ID,
+            ConstraintSet.TOP
+        )
+        constraintSet.connect(
+            durationImageView.id, ConstraintSet.RIGHT, durationTextView.id, ConstraintSet.LEFT, dp(
+                24
+            )
+        )
         constraintSet.constrainHeight(durationImageView.id, WRAP_CONTENT)
         constraintSet.applyTo(scoreDurationConstraintLayout)
     }
@@ -322,14 +568,26 @@ class RecipeDetailsScreenView(context: Context): ConstraintLayout(context) {
     private fun layoutInfoTextView() {
         scrollViewConstraintLayout.addView(infoTextView)
         val constraintSet = ConstraintSet()
-        constraintSet.connect(infoTextView.id, ConstraintSet.TOP, pictureImageView.id, ConstraintSet.BOTTOM, dp(32))
-        constraintSet.connect(infoTextView.id, ConstraintSet.LEFT, ConstraintSet.PARENT_ID, ConstraintSet.LEFT, dp(24))
-        constraintSet.connect(infoTextView.id, ConstraintSet.RIGHT, ConstraintSet.PARENT_ID, ConstraintSet.RIGHT, dp(24))
+        constraintSet.connect(
+            infoTextView.id, ConstraintSet.TOP, pictureImageView.id, ConstraintSet.BOTTOM, dp(
+                32
+            )
+        )
+        constraintSet.connect(
+            infoTextView.id, ConstraintSet.LEFT, ConstraintSet.PARENT_ID, ConstraintSet.LEFT, dp(
+                24
+            )
+        )
+        constraintSet.connect(
+            infoTextView.id, ConstraintSet.RIGHT, ConstraintSet.PARENT_ID, ConstraintSet.RIGHT, dp(
+                24
+            )
+        )
         constraintSet.constrainHeight(infoTextView.id, WRAP_CONTENT)
         constraintSet.applyTo(scrollViewConstraintLayout)
     }
 
-    private fun layoutIngredientsTextView() {
+    private fun layoutIngredientsConstraintLayout() {
         scrollViewConstraintLayout.addView(ingredientsConstraintLayout)
         val constraintSet = ConstraintSet()
         constraintSet.connect(ingredientsConstraintLayout.id, ConstraintSet.TOP, infoTextView.id, ConstraintSet.BOTTOM, dp(32))
@@ -339,12 +597,46 @@ class RecipeDetailsScreenView(context: Context): ConstraintLayout(context) {
         constraintSet.applyTo(scrollViewConstraintLayout)
     }
 
+    private fun layoutIngredientsTextView() {
+        ingredientsConstraintLayout.addView(ingredientsTextView)
+        val constraintSet = ConstraintSet()
+        constraintSet.connect(ingredientsTextView.id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
+        constraintSet.connect(ingredientsTextView.id, ConstraintSet.LEFT, ConstraintSet.PARENT_ID, ConstraintSet.LEFT)
+        constraintSet.connect(ingredientsTextView.id, ConstraintSet.RIGHT, ConstraintSet.PARENT_ID, ConstraintSet.RIGHT)
+        constraintSet.constrainHeight(ingredientsTextView.id, WRAP_CONTENT)
+        constraintSet.applyTo(ingredientsConstraintLayout)
+    }
+
     private fun layoutDescriptionTitleLabel() {
         scrollViewConstraintLayout.addView(descriptionTitleLabel)
         val constraintSet = ConstraintSet()
-        constraintSet.connect(descriptionTitleLabel.id, ConstraintSet.TOP, ingredientsConstraintLayout.id, ConstraintSet.BOTTOM, dp(32))
-        constraintSet.connect(descriptionTitleLabel.id, ConstraintSet.LEFT, ConstraintSet.PARENT_ID, ConstraintSet.LEFT, dp(24))
-        constraintSet.connect(descriptionTitleLabel.id, ConstraintSet.RIGHT, ConstraintSet.PARENT_ID, ConstraintSet.RIGHT, dp(24))
+        constraintSet.connect(
+            descriptionTitleLabel.id,
+            ConstraintSet.TOP,
+            ingredientsConstraintLayout.id,
+            ConstraintSet.BOTTOM,
+            dp(
+                32
+            )
+        )
+        constraintSet.connect(
+            descriptionTitleLabel.id,
+            ConstraintSet.LEFT,
+            ConstraintSet.PARENT_ID,
+            ConstraintSet.LEFT,
+            dp(
+                24
+            )
+        )
+        constraintSet.connect(
+            descriptionTitleLabel.id,
+            ConstraintSet.RIGHT,
+            ConstraintSet.PARENT_ID,
+            ConstraintSet.RIGHT,
+            dp(
+                24
+            )
+        )
         constraintSet.constrainHeight(descriptionTitleLabel.id, WRAP_CONTENT)
         constraintSet.applyTo(scrollViewConstraintLayout)
     }
@@ -352,9 +644,33 @@ class RecipeDetailsScreenView(context: Context): ConstraintLayout(context) {
     private fun layoutDescriptionLabel() {
         scrollViewConstraintLayout.addView(descriptionLabel)
         val constraintSet = ConstraintSet()
-        constraintSet.connect(descriptionLabel.id, ConstraintSet.TOP, descriptionTitleLabel.id, ConstraintSet.BOTTOM, dp(32))
-        constraintSet.connect(descriptionLabel.id, ConstraintSet.LEFT, ConstraintSet.PARENT_ID, ConstraintSet.LEFT, dp(24))
-        constraintSet.connect(descriptionLabel.id, ConstraintSet.RIGHT, ConstraintSet.PARENT_ID, ConstraintSet.RIGHT, dp(24))
+        constraintSet.connect(
+            descriptionLabel.id,
+            ConstraintSet.TOP,
+            descriptionTitleLabel.id,
+            ConstraintSet.BOTTOM,
+            dp(
+                32
+            )
+        )
+        constraintSet.connect(
+            descriptionLabel.id,
+            ConstraintSet.LEFT,
+            ConstraintSet.PARENT_ID,
+            ConstraintSet.LEFT,
+            dp(
+                24
+            )
+        )
+        constraintSet.connect(
+            descriptionLabel.id,
+            ConstraintSet.RIGHT,
+            ConstraintSet.PARENT_ID,
+            ConstraintSet.RIGHT,
+            dp(
+                24
+            )
+        )
         constraintSet.constrainHeight(descriptionLabel.id, WRAP_CONTENT)
         constraintSet.applyTo(scrollViewConstraintLayout)
     }
@@ -362,15 +678,63 @@ class RecipeDetailsScreenView(context: Context): ConstraintLayout(context) {
     private fun layoutScoreView() {
         scrollViewConstraintLayout.addView(scoreView)
         val constraintSet = ConstraintSet()
-        constraintSet.connect(scoreView.id, ConstraintSet.TOP, descriptionLabel.id, ConstraintSet.BOTTOM, dp(32))
-        constraintSet.connect(scoreView.id, ConstraintSet.LEFT, ConstraintSet.PARENT_ID, ConstraintSet.LEFT)
-        constraintSet.connect(scoreView.id, ConstraintSet.RIGHT, ConstraintSet.PARENT_ID, ConstraintSet.RIGHT)
-        constraintSet.connect(scoreView.id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
+        constraintSet.connect(
+            scoreView.id, ConstraintSet.TOP, descriptionLabel.id, ConstraintSet.BOTTOM, dp(
+                32
+            )
+        )
+        constraintSet.connect(
+            scoreView.id,
+            ConstraintSet.LEFT,
+            ConstraintSet.PARENT_ID,
+            ConstraintSet.LEFT
+        )
+        constraintSet.connect(
+            scoreView.id,
+            ConstraintSet.RIGHT,
+            ConstraintSet.PARENT_ID,
+            ConstraintSet.RIGHT
+        )
+        constraintSet.connect(
+            scoreView.id,
+            ConstraintSet.BOTTOM,
+            ConstraintSet.PARENT_ID,
+            ConstraintSet.BOTTOM
+        )
         constraintSet.constrainHeight(scoreView.id, WRAP_CONTENT)
         constraintSet.applyTo(scrollViewConstraintLayout)
     }
 
     //endregion
+
+    fun setIngredients(ingredients: List<String>) {
+        ingredientsTextViews.forEach({ ingredientsConstraintLayout.removeView(it) })
+        ingredientsTextViews.clear()
+        val constraintSet2 = ConstraintSet()
+        constraintSet2.clear(ingredientsTextView.id, ConstraintSet.BOTTOM)
+        constraintSet2.applyTo(ingredientsConstraintLayout)
+        var lastView = ingredientsTextView
+        for (ingredient in ingredients) {
+            val text = "  •     $ingredient"
+            val textView = TextView(context)
+            textView.setTextColor(Color.BLACK)
+            textView.textSize = 17.0f
+            textView.text = text
+            textView.id = View.generateViewId()
+            ingredientsTextViews.add(textView)
+            ingredientsConstraintLayout.addView(textView)
+            val constraintSet = ConstraintSet()
+            constraintSet.connect(textView.id, ConstraintSet.TOP, lastView.id, ConstraintSet.BOTTOM)
+            constraintSet.connect(textView.id, ConstraintSet.LEFT, ConstraintSet.PARENT_ID, ConstraintSet.LEFT)
+            constraintSet.connect(textView.id, ConstraintSet.RIGHT, ConstraintSet.PARENT_ID, ConstraintSet.RIGHT)
+            if (ingredient == ingredients.last()) {
+                constraintSet.connect(textView.id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
+            }
+            constraintSet.constrainHeight(textView.id, WRAP_CONTENT)
+            constraintSet.applyTo(ingredientsConstraintLayout)
+            lastView = textView
+        }
+    }
 
 }
 
@@ -406,12 +770,21 @@ fun View.requestApplyInsetsWhenAttached() {
     }
 }
 
-data class InitialPadding(val left: Int, val top: Int,
-                          val right: Int, val bottom: Int)
+data class InitialPadding(
+    val left: Int, val top: Int,
+    val right: Int, val bottom: Int
+)
 
-private fun recordInitialPaddingForView(view: View) = InitialPadding(view.paddingLeft, view.paddingTop, view.paddingRight, view.paddingBottom)
+private fun recordInitialPaddingForView(view: View) = InitialPadding(
+    view.paddingLeft,
+    view.paddingTop,
+    view.paddingRight,
+    view.paddingBottom
+)
 
-private class PictureImageView(context: Context): androidx.appcompat.widget.AppCompatImageView(context) {
+private class PictureImageView(context: Context): androidx.appcompat.widget.AppCompatImageView(
+    context
+) {
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
@@ -429,18 +802,29 @@ class ScoreView(context: Context): FrameLayout(context) {
     val progressBar = ProgressBar(context)
 
     init {
-        addView(verticalLinearLayout, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT))
+        addView(
+            verticalLinearLayout, LayoutParams(
+                LayoutParams.MATCH_PARENT,
+                LayoutParams.WRAP_CONTENT
+            )
+        )
 
         verticalLinearLayout.orientation = LinearLayout.VERTICAL
         setBackgroundColor(Color.BLUE)
-        val textViewLayoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+        val textViewLayoutParams = LayoutParams(
+            LayoutParams.MATCH_PARENT,
+            LayoutParams.MATCH_PARENT
+        )
         textViewLayoutParams.setMargins(dp(0), dp(24), dp(0), dp(0))
         verticalLinearLayout.addView(textView, textViewLayoutParams)
         textView.setTextColor(Color.WHITE)
         textView.textSize = 17.0f
         textView.gravity = Gravity.CENTER
 
-        val scoreStarsViewLayoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+        val scoreStarsViewLayoutParams = LayoutParams(
+            LayoutParams.MATCH_PARENT,
+            LayoutParams.MATCH_PARENT
+        )
         scoreStarsViewLayoutParams.setMargins(dp(0), dp(8), dp(0), dp(24))
         verticalLinearLayout.addView(scoreStarsView, scoreStarsViewLayoutParams)
 

@@ -86,6 +86,9 @@ class RecipesListScreenView(context: Context): ConstraintLayout(context) {
     val swipeRefreshLayout: SwipeRefreshLayout = SwipeRefreshLayout(context)
     val recyclerView: RecyclerView = RecyclerView(context)
 
+    //region Layout
+    //
+
     init {
         layout()
     }
@@ -103,7 +106,7 @@ class RecipesListScreenView(context: Context): ConstraintLayout(context) {
         addView(barView)
         val constraintSet = ConstraintSet()
         constraintSet.connect(barView.id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
-        constraintSet.constrainHeight(barView.id, dp(44))
+        constraintSet.constrainHeight(barView.id, dp(56))
         constraintSet.connect(barView.id, ConstraintSet.LEFT, ConstraintSet.PARENT_ID, ConstraintSet.LEFT)
         constraintSet.connect(barView.id, ConstraintSet.RIGHT, ConstraintSet.PARENT_ID, ConstraintSet.RIGHT)
         constraintSet.applyTo(this)
@@ -122,5 +125,7 @@ class RecipesListScreenView(context: Context): ConstraintLayout(context) {
     fun layoutRecyclerView() {
         swipeRefreshLayout.addView(recyclerView, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
     }
+
+    //endregion
 
 }
