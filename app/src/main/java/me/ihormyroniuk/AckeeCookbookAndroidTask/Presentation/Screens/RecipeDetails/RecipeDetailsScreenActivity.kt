@@ -60,7 +60,6 @@ class RecipeDetailsScreenActivity: Activity() {
         setContentView(view)
         delegate = delegates.get(intent.getStringExtra(RecipeDetailsScreenActivity.identiferKey))
         recipeInList = recipesInLists.get(intent.getStringExtra(RecipeDetailsScreenActivity.identiferKey))!!
-        window.statusBarColor = Color.TRANSPARENT
         setup()
         refresh()
         setContent()

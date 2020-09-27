@@ -44,6 +44,20 @@ class RecipesListScreenActivity: Activity() {
         refreshList()
     }
 
+    fun knowRecipeWasAdded(recipe: RecipeInList) {
+        refreshList()
+    }
+
+    fun knowRecipeScoreWasChanged(recipe: RecipeInList, score: Float) {
+        val recipeId = recipe.id
+        val item = recipes.first { it.id == recipeId }
+        item?.score = score
+        val index = recipes.indexOf(item)
+        if (index != null) {
+            view.recyclerView.adapter?.notifyItemChanged(index)
+        }
+    }
+
     private lateinit var view: RecipesListScreenView
     private val linearLayoutManager = LinearLayoutManager(this)
     private var delegate: WeakReference<RecipesListScreenDelegate>? = null

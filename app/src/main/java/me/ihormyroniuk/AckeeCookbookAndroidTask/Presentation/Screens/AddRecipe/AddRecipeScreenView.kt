@@ -162,7 +162,7 @@ class AddRecipeScreenView(context: Context): ConstraintLayout(context) {
         constraintSet.connect(barView.id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
         constraintSet.connect(barView.id, ConstraintSet.LEFT, ConstraintSet.PARENT_ID, ConstraintSet.LEFT)
         constraintSet.connect(barView.id, ConstraintSet.RIGHT, ConstraintSet.PARENT_ID, ConstraintSet.RIGHT)
-        constraintSet.constrainHeight(barView.id, dp(44))
+        constraintSet.constrainHeight(barView.id, dp(56))
         constraintSet.applyTo(this)
     }
 
@@ -203,7 +203,7 @@ class AddRecipeScreenView(context: Context): ConstraintLayout(context) {
     private fun layoutIngredientsConstraintLayout() {
         scrollViewConstraitLayout.addView(ingredientsConstraintLayout)
         val constraintSet = ConstraintSet()
-        constraintSet.connect(ingredientsConstraintLayout.id, ConstraintSet.TOP, infoEditText.id, ConstraintSet.BOTTOM, dp(30))
+        constraintSet.connect(ingredientsConstraintLayout.id, ConstraintSet.TOP, infoEditText.id, ConstraintSet.BOTTOM, dp(36))
         constraintSet.connect(ingredientsConstraintLayout.id, ConstraintSet.LEFT, ConstraintSet.PARENT_ID, ConstraintSet.LEFT, dp(24))
         constraintSet.connect(ingredientsConstraintLayout.id, ConstraintSet.RIGHT, ConstraintSet.PARENT_ID, ConstraintSet.RIGHT, dp(24))
         constraintSet.constrainHeight(ingredientsConstraintLayout.id, WRAP_CONTENT)
@@ -213,7 +213,7 @@ class AddRecipeScreenView(context: Context): ConstraintLayout(context) {
     private fun layoutIngredientsTextView() {
         ingredientsConstraintLayout.addView(ingredientsTextView)
         val constraintSet = ConstraintSet()
-        constraintSet.connect(ingredientsTextView.id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, dp(30))
+        constraintSet.connect(ingredientsTextView.id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
         constraintSet.connect(ingredientsTextView.id, ConstraintSet.LEFT, ConstraintSet.PARENT_ID, ConstraintSet.LEFT)
         constraintSet.connect(ingredientsTextView.id, ConstraintSet.RIGHT, ConstraintSet.PARENT_ID, ConstraintSet.RIGHT)
         constraintSet.constrainHeight(ingredientsTextView.id, WRAP_CONTENT)
@@ -256,7 +256,7 @@ class AddRecipeScreenView(context: Context): ConstraintLayout(context) {
     //region
     //
 
-    fun addIngregiendEditText() {
+    fun addIngregiendEditText(): EditText {
 
         val lastView = if (ingredientsEditTexts.isEmpty()) ingredientsTextView else ingredientsEditTexts.last()
         val editText = EditText(context)
@@ -277,6 +277,7 @@ class AddRecipeScreenView(context: Context): ConstraintLayout(context) {
         constraintSet.constrainHeight(addIngredientButton.id, WRAP_CONTENT)
 
         constraintSet.applyTo(ingredientsConstraintLayout)
+        return editText
     }
 
     //endregion

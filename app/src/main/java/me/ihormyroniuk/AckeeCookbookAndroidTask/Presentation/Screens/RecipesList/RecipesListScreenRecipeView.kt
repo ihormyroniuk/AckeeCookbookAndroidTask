@@ -12,6 +12,7 @@ import android.widget.TextView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.widget.TextViewCompat
 import me.ihormyroniuk.AckeeCookbookAndroidTask.Http.dp
+import me.ihormyroniuk.AckeeCookbookAndroidTask.Presentation.Colors.Colors
 import me.ihormyroniuk.AckeeCookbookAndroidTask.Presentation.Components.ScoreStarsView
 import me.ihormyroniuk.AckeeCookbookAndroidTask.Presentation.Images.Images
 
@@ -48,6 +49,7 @@ class RecipesListScreenRecipeView(context: Context): LinearLayout(context) {
 
     fun setup() {
         setupNameTextView()
+        scoreStarsView.starsColor = Colors.pink
         setupDurationImageView()
         setupDurationTextView()
         setupSeparatorView()

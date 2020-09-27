@@ -111,6 +111,9 @@ class Presentation: RecipesListScreenDelegate, RecipeDetailsScreenDelegate, AddR
                 if (result is Success) {
                     val recipe = Success(result.success)
                     completionHandler(recipe)
+                    recipesListScreenActivity?.get()?.runOnUiThread {
+                        recipesListScreenActivity?.get()?.knowRecipeScoreWasChanged(recipeDetailsScreen.recipeInList, score)
+                    }
                 }
                 if (result is Failure) {
                     val error = result
@@ -133,6 +136,9 @@ class Presentation: RecipesListScreenDelegate, RecipeDetailsScreenDelegate, AddR
         delegate?.get()?.presentationAddRecipe(this, recipe) { result ->
             if (result is Success) {
                 addRecipeScreen.finish()
+                recipesListScreenActivity?.get()?.runOnUiThread {
+                    recipesListScreenActivity?.get()?.knowRecipeWasAdded(result.success.recipeInList)
+                }
             }
             if (result is Failure) {
 

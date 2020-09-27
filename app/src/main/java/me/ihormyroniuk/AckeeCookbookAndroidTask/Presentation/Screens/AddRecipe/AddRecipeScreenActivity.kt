@@ -1,10 +1,15 @@
 package me.ihormyroniuk.AckeeCookbookAndroidTask.Presentation.Screens.AddRecipe
 
 import android.app.Activity
+import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.text.SpannableStringBuilder
+import android.view.View.NOT_FOCUSABLE
+import android.widget.EditText
+import android.widget.TimePicker
 import me.ihormyroniuk.AckeeCookbookAndroidTask.Business.CreatingRecipe
 import me.ihormyroniuk.AckeeCookbookAndroidTask.Business.RecipeDetails
 import me.ihormyroniuk.AckeeCookbookAndroidTask.Business.RecipeInList
@@ -20,7 +25,7 @@ interface AddRecipeScreenDelegate {
     fun addRecipeScreenAddRecipe(addRecipeScreen: AddRecipeScreenActivity, recipe: CreatingRecipe)
 }
 
-class AddRecipeScreenActivity: Activity() {
+class AddRecipeScreenActivity: Activity(), TimePickerDialog.OnTimeSetListener {
 
     companion object {
 
@@ -60,6 +65,11 @@ class AddRecipeScreenActivity: Activity() {
         }
     }
 
+    override fun onTimeSet(p0: TimePicker, p1: Int, p2: Int) {
+        val minutes = p1 * 60 + p2
+        view.durationEditText.text = SpannableStringBuilder("$minutes")
+    }
+
     //endregion
 
     //region Setup
@@ -69,6 +79,7 @@ class AddRecipeScreenActivity: Activity() {
         setupBackButton()
         setupAddButton()
         setupAddIngredientButton()
+        setupDurationEditText()
     }
 
     private fun setupBackButton() {
@@ -89,6 +100,15 @@ class AddRecipeScreenActivity: Activity() {
         }
     }
 
+    private fun setupDurationEditText() {
+        view.durationEditText.setOnClickListener {
+            val timePickerDialog = TimePickerDialog(this, this, 0, 30, true)
+            timePickerDialog.show()
+        }
+        view.durationEditText.focusable = NOT_FOCUSABLE
+        view.durationEditText.isFocusableInTouchMode = false
+    }
+
     //endregion
 
     //region Actions
@@ -103,12 +123,14 @@ class AddRecipeScreenActivity: Activity() {
         val info = view.infoEditText.text.toString()
         val ingredients = view.ingredientsEditTexts.map { it.text.toString() }
         val description = view.descriptionEditText.text.toString()
-        val recipe = CreatingRecipe(name, description, info, ingredients, 90)
+        val duration = view.durationEditText.text.toString().toInt()
+        val recipe = CreatingRecipe(name, description, info, ingredients, duration)
         delegate?.get()?.addRecipeScreenAddRecipe(this, recipe)
     }
 
     private fun addIngredient() {
-        view.addIngregiendEditText()
+        var editText = view.addIngregiendEditText()
+        setIngredientEditText(editText)
     }
 
     //endregion
@@ -116,7 +138,14 @@ class AddRecipeScreenActivity: Activity() {
     private fun setContent() {
         view.barView.titleTextView.text = "Add Recipe"
         view.nameEditText.hint = "Name"
+        view.infoEditText.hint = "Info"
+        view.descriptionEditText.hint = "Description"
         view.ingredientsTextView.text = "Ingredients"
+        view.durationEditText.hint = "Duration"
+    }
+
+    private fun setIngredientEditText(editText: EditText) {
+        editText.hint = "Ingredient"
     }
 
 }
