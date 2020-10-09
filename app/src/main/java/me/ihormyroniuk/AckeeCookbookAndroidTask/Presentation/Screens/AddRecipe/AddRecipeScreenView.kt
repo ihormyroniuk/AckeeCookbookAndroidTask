@@ -11,6 +11,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.constraintlayout.widget.ConstraintSet.WRAP_CONTENT
 import me.ihormyroniuk.AckeeCookbookAndroidTask.Http.dp
+import me.ihormyroniuk.AckeeCookbookAndroidTask.Presentation.Colors.Colors
 import me.ihormyroniuk.AckeeCookbookAndroidTask.R
 
 class AddRecipeScreenBarView(context: Context): ConstraintLayout(context) {

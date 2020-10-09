@@ -137,6 +137,7 @@ class AddRecipeScreenActivity: Activity(), TimePickerDialog.OnTimeSetListener {
 
     private fun setContent() {
         view.barView.titleTextView.text = "Add Recipe"
+        view.addIngredientButton.text = "Add"
         view.nameEditText.hint = "Name"
         view.infoEditText.hint = "Info"
         view.descriptionEditText.hint = "Description"

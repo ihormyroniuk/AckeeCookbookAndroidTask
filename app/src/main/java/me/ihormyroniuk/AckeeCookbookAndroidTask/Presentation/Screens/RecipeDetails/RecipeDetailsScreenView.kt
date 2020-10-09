@@ -69,7 +69,6 @@ class RecipeDetailsScreenBarView(context: Context): ConstraintLayout(context) {
 
     fun setupDeleteButton() {
         deleteButton.id = View.generateViewId()
-        //deleteButton.setBackgroundColor(Color.TRANSPARENT)
 
         val states = arrayOf(
             intArrayOf(android.R.attr.state_enabled),
@@ -600,20 +599,6 @@ class RecipeDetailsScreenView(context: Context): ConstraintLayout(context) {
         }
     }
 
-}
-
-fun View.doOnApplyWindowInsets(f: (View, WindowInsets, InitialPadding) -> Unit) {
-    // Create a snapshot of the view's padding state
-    val initialPadding = recordInitialPaddingForView(this)
-    // Set an actual OnApplyWindowInsetsListener which proxies to the given
-    // lambda, also passing in the original padding state
-    setOnApplyWindowInsetsListener { v, insets ->
-        f(v, insets, initialPadding)
-        // Always return the insets, so that children can also use them
-        insets
-    }
-    // request some insets
-    requestApplyInsetsWhenAttached()
 }
 
 fun View.requestApplyInsetsWhenAttached() {
