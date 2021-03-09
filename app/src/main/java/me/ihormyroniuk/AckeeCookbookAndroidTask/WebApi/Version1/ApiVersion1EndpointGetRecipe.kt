@@ -17,9 +17,9 @@ class ApiVersion1EndpointGetRecipe(protocol: String, host: String): ApiVersion1E
     }
 
     fun response(httpResponse: HttpResponse): Result<RecipeDetails, ApiVersion1Error> {
-        val body = httpResponse.messageBody
+        val body = httpResponse.body
         val json = String(if (body != null) body else ByteArray(0), Charsets.UTF_8)
-        val statusCode = httpResponse.statusCode
+        val statusCode = httpResponse.code
         if (statusCode == 200) {
             val jsonObject = JSONObject(json)
             val recipe = recipeDetails(jsonObject)

@@ -1,7 +1,6 @@
 package me.ihormyroniuk.AckeeCookbookAndroidTask.WebApi.Version1
 
 import me.ihormyroniuk.AckeeCookbookAndroidTask.Business.AddedNewRating
-import me.ihormyroniuk.AckeeCookbookAndroidTask.Business.RecipeDetails
 import me.ihormyroniuk.AckeeCookbookAndroidTask.Http.*
 import me.ihormyroniuk.AckeeCookbookAndroidTask.WebApi.Api
 import org.json.JSONObject
@@ -23,9 +22,9 @@ class ApiVersion1EndpointAddNewRating(protocol: String, host: String): ApiVersio
     }
 
     fun response(httpResponse: HttpResponse): Result<AddedNewRating, ApiVersion1Error> {
-        val body = httpResponse.messageBody
+        val body = httpResponse.body
         val json = String(if (body != null) body else ByteArray(0), Charsets.UTF_8)
-        val statusCode = httpResponse.statusCode
+        val statusCode = httpResponse.code
         if (statusCode == 200) {
             val jsonObject = JSONObject(json)
             val id = jsonObject.getString("id")

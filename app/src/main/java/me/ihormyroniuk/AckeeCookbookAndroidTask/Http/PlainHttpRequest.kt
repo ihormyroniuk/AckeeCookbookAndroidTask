@@ -6,9 +6,9 @@ class PlainHttpRequest(method: String, url: URL, version: String, headers: Map<S
     HttpRequest {
 
     override val method: String = method
-    override val requestUri: URL = url
-    override val httpVersion: String = version
-    override val headerFields: Map<String, String>? = headers
-    override val messageBody: ByteArray? = body
+    override val uri: URL = url
+    override val version: String = version
+    override val headers: Map<String, String>? = headers
+    override val body: ByteArray? = body
 
 }

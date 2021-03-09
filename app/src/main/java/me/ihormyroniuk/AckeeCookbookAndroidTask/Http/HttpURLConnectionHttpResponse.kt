@@ -5,11 +5,11 @@ import java.net.HttpURLConnection
 class HttpURLConnectionHttpResponse(httpURLConnection: HttpURLConnection):
     HttpResponse {
 
-    override val httpVersion: String = ""
-    override val statusCode: Int = httpURLConnection.responseCode
-    override val reasonPhrase: String = httpURLConnection.responseMessage
-    override val headerFields: Map<String, String>?
-    override val messageBody: ByteArray? = httpURLConnection.inputStream.readBytes()
+    override val version: String = ""
+    override val code: Int = httpURLConnection.responseCode
+    override val phrase: String = httpURLConnection.responseMessage
+    override val headers: Map<String, String>?
+    override val body: ByteArray? = httpURLConnection.inputStream.readBytes()
 
     init {
         val headerFields = mutableMapOf<String, String>()
@@ -17,7 +17,7 @@ class HttpURLConnectionHttpResponse(httpURLConnection: HttpURLConnection):
             if (key == null) { continue }
             headerFields[key] = value.joinToString(separator = ",")
         }
-        this.headerFields = headerFields
+        this.headers = headerFields
     }
 
 }

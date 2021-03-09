@@ -8,14 +8,15 @@ import me.ihormyroniuk.AckeeCookbookAndroidTask.Http.HttpURLConnection
 import me.ihormyroniuk.AckeeCookbookAndroidTask.Business.RecipeDetails
 import me.ihormyroniuk.AckeeCookbookAndroidTask.Business.RecipeInList
 import me.ihormyroniuk.AckeeCookbookAndroidTask.WebApi.Version1.*
+import me.ihormyroniuk.AckeeCookbookAndroidTask.WebApi.Version1.GetRecipes.Portion
 
 class WebApiPerformer {
 
     var apiVersion1 = ApiVersion1.production()
 
-    fun getRecipes(offset: Int, limit: Int, completionHandler: (Result<List<RecipeInList>, Error>) -> Unit) {
-        val endpoint = apiVersion1.getRecipes()
-        val request = endpoint.request(limit, offset)
+    fun getRecipes(portion: Portion, completionHandler: (Result<List<RecipeInList>, Error>) -> Unit) {
+        val endpoint = apiVersion1.getRecipes(portion)
+        val request = endpoint.request()
         doAsync {
             val connection = HttpURLConnection(request)
             try {

@@ -1,6 +1,5 @@
 package me.ihormyroniuk.AckeeCookbookAndroidTask.WebApi.Version1
 
-import me.ihormyroniuk.AckeeCookbookAndroidTask.Business.RecipeDetails
 import me.ihormyroniuk.AckeeCookbookAndroidTask.Http.*
 import me.ihormyroniuk.AckeeCookbookAndroidTask.WebApi.Api
 import org.json.JSONObject
@@ -17,11 +16,11 @@ class ApiVersion1EndpointDeleteRecipe(protocol: String, host: String): ApiVersio
     }
 
     fun response(httpResponse: HttpResponse): ApiVersion1Error? {
-        val statusCode = httpResponse.statusCode
+        val statusCode = httpResponse.code
         if (statusCode == 204) {
             return null
         } else {
-            val body = httpResponse.messageBody
+            val body = httpResponse.body
             val json = String(if (body != null) body else ByteArray(0), Charsets.UTF_8)
             val jsonObject = JSONObject(json)
             val error = this.error(jsonObject)

@@ -1,6 +1,8 @@
 package me.ihormyroniuk.AckeeCookbookAndroidTask.WebApi.Version1
 
 import me.ihormyroniuk.AckeeCookbookAndroidTask.WebApi.Api
+import me.ihormyroniuk.AckeeCookbookAndroidTask.WebApi.Version1.GetRecipes.ApiVersion1EndpointGetRecipes
+import me.ihormyroniuk.AckeeCookbookAndroidTask.WebApi.Version1.GetRecipes.Portion
 
 class ApiVersion1(val protocol: String, val host: String): Api() {
 
@@ -18,8 +20,8 @@ class ApiVersion1(val protocol: String, val host: String): Api() {
         }
     }
 
-    fun getRecipes(): ApiVersion1EndpointGetRecipes {
-        val endpoint = ApiVersion1EndpointGetRecipes(protocol, host)
+    fun getRecipes(portion: Portion): ApiVersion1EndpointGetRecipes {
+        val endpoint = ApiVersion1EndpointGetRecipes(protocol, host, portion)
         return endpoint
     }
 

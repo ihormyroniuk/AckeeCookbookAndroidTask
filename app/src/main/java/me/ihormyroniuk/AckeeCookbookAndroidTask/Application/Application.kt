@@ -7,6 +7,7 @@ import me.ihormyroniuk.AckeeCookbookAndroidTask.Http.Result
 import me.ihormyroniuk.AckeeCookbookAndroidTask.Http.Success
 import me.ihormyroniuk.AckeeCookbookAndroidTask.Presentation.Presentation
 import me.ihormyroniuk.AckeeCookbookAndroidTask.Presentation.PresentationDelegate
+import me.ihormyroniuk.AckeeCookbookAndroidTask.WebApi.Version1.GetRecipes.Portion
 import me.ihormyroniuk.AckeeCookbookAndroidTask.WebApi.WebApiPerformer
 import java.lang.ref.WeakReference
 
@@ -26,7 +27,8 @@ class Application: Application(), PresentationDelegate {
     }
 
     override fun presentationGetRecipes(presentation: Presentation, offset: Int, limit: Int, completionHandler: (Result<List<RecipeInList>, Error>) -> Unit) {
-        webApiPerformer.getRecipes(offset, limit) { result ->
+        val portion = Portion(limit, offset)
+        webApiPerformer.getRecipes(portion) { result ->
             if (result is Success) {
                 val recipes = Success(result.success)
                 completionHandler(recipes)
